@@ -1,0 +1,14 @@
+# 编译产物
+*.exe
+*.o
+*.obj
+game_cre.*
+
+# 压缩包
+*.zip
+
+# 构建/系统目录
+x64/
+build/
+.vscode/
+save/

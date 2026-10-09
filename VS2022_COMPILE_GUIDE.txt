@@ -1,0 +1,47 @@
+/* 
+VS2022 编译配置说明（天神传 MUD）
+
+源码按功能分模块，位于 src/ 下：
+  src/core       入口与核心框架（main / Game / GameData / CommandParser）
+  src/ui         界面（MainMenu / UIManager）
+  src/character  角色（Player / Attribute / Skills）
+  src/combat     战斗（CombatSystem / CommonEnemy / EvilGeneral / BossWanEshuji）
+  src/items      物品装备（Item / Equipment / DivineWeapon / DivineSet / ShopSystem）
+  src/world      地图关卡（Map / Room / NPC）
+  src/quest      任务系统（TaskSystem）
+  src/system     存档系统（SaveLoadSystem）
+
+推荐直接运行根目录 compile.bat（自动定位 MSVC 并处理编码）。
+
+如需手动在 VS2022 里配置：
+
+1. 设置 C++ 标准：
+   - 项目属性 -> C/C++ -> 语言 -> C++语言标准 -> C++17 或 C++20
+
+2. 附加包含目录（必须把 src 下所有模块目录加进来，因为源码用 #include "X.h" 平铺引用）：
+   src
+   src\core
+   src\ui
+   src\character
+   src\combat
+   src\items
+   src\world
+   src\quest
+   src\system
+
+3. 预处理器定义（两个都是必需的）：
+   - 源文件是 UTF-8：命令行参数 /utf-8（或项目属性 -> 常规 -> 字符集）
+   - windows.h 的 max/min 宏会与 std::max 冲突：添加 NOMINMAX
+   - 添加 _CRT_SECURE_NO_WARNINGS 以消除安全警告
+
+4. 将 src 下所有 .cpp 文件加入项目（可右键项目 -> 添加 -> 现有项）。
+
+5. 链接器设置：
+   - 如果使用了特殊库，确保正确链接（本游戏仅依赖系统库，通常无需额外配置）
+
+常见问题修复：
+- 中文乱码/语法错误：确认用了 /utf-8（源码无 BOM，需显式指定）
+- 报 max 相关错误：添加 NOMINMAX
+- 找不到头文件：把上面列出的全部目录都加入附加包含目录
+- 控制台中文显示：程序已在 main 中设置 UTF-8 输出，终端需支持 UTF-8
+*/
