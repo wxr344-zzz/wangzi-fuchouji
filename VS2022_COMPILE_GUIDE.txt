@@ -43,5 +43,7 @@ VS2022 编译配置说明（天神传 MUD）
 - 中文乱码/语法错误：确认用了 /utf-8（源码无 BOM，需显式指定）
 - 报 max 相关错误：添加 NOMINMAX
 - 找不到头文件：把上面列出的全部目录都加入附加包含目录
-- 控制台中文显示：程序已在 main 中设置 UTF-8 输出，终端需支持 UTF-8
+- 控制台中文显示乱码（"璇烽€夐"这类）：源码已是 UTF-8、程序也 SetConsoleOutputCP(CP_UTF8)，
+  真正原因是 main 里若用 std::locale("") 会在中文 Windows 上得到 GBK locale，把 UTF-8 字节二次解码。
+  本仓库已在 main.cpp 用 setlocale(LC_ALL, ".UTF-8") + std::locale(".UTF-8") 修复，无需再手动设终端。
 */

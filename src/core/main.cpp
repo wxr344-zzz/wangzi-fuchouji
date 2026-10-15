@@ -6,6 +6,7 @@
 #ifdef _WIN32
 #include <windows.h>
 #include <locale>
+#include <clocale>
 #include <io.h>
 #include <fcntl.h>
 #endif
@@ -40,8 +41,11 @@ int main() {
             wcscpy_s(cfi.FaceName, L"Consolas");
             SetCurrentConsoleFontEx(GetStdHandle(STD_OUTPUT_HANDLE), FALSE, &cfi);
             
-            // 设置C++本地化
-            std::locale::global(std::locale(""));
+            // 设置C++本地化：必须显式用 UTF-8。
+            // 注意：不能用 std::locale("")，它在中文 Windows 上会得到 GBK(936) locale，
+            // 导致 UCRT 向控制台输出窄字符串时把本就是 UTF-8 的字节按 GBK 二次解码，中文全乱码。
+            setlocale(LC_ALL, ".UTF-8");
+            std::locale::global(std::locale(".UTF-8"));
         } catch (const std::exception& e) {
             std::cerr << "控制台设置警告: " << e.what() << std::endl;
             std::cerr << "游戏可能显示异常，但仍会继续运行。" << std::endl;
